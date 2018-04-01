@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>GDPR Personal Info Download</title>
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .download {
+      text-decoration: none;
+      color: #003ea9;
+      font-family: Open Sans,Arial,Helvetica,sans-serif;
+      font-size: .875rem;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <a class="download1" href="https://usa.visa.com/content/dam/VCOM/global/support-legal/documents/visa-checkout-privacy-fr-2018.pdf" target="_blank" download="test">Download as PDF</a>
+    <a class="download" href="" data-extension="pdf">Download as PDF</a>
+    <a class="download" href="" data-extension="json">Download as JSON</a>
+  </div>
+  <script>
+    var downloadLinks = document.getElementsByClassName('download');
+    var i;
+    for(i=0; i < downloadLinks.length; i++) {
+      var downloadLink = downloadLinks[i];
+      downloadLink.addEventListener('click', function(e) {
+        e.preventDefault();        
+        download(`https://usa.visa.com/content/dam/VCOM/global/support-legal/documents/visa-checkout-privacy-fr-2018.pdf`)
+      });
+    }
+    var download = function(url) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url);
+      //add this property
+      xhr.responseType = 'arraybuffer';
+      xhr.send();
+      var type = url.split('type=');
+      //var extension = type[1];
+      var extension ='pdf';
+      xhr.onload = function(e) {
+          if (this.status == 200) {
+             var blob = new Blob([this.response], {type: `application/${extension}`});             
+              var a = document.createElement("a");
+              a.style = "display: none";
+              document.body.appendChild(a);
+               var url = window.URL.createObjectURL(blob);
+              a.href = url;
+              //a.download = `myFile.pdf`;
+              a.download = `myFile.${extension}`;
+              a.click();
+              window.URL.revokeObjectURL(url);
+          } else{
+              alert(this.status);
+          }
+      };
+    }
+  </script>
+</body>
+</html>
+
+
+
+
